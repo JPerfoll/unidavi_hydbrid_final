@@ -1,0 +1,7 @@
+{
+  "name": "unidavi-hybrid-final",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
