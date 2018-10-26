@@ -1,19 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuardService } from './services/guard/auth-guard.service';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+  { path: '', redirectTo: 'teachers', pathMatch: 'full'},
+  { path: 'login', loadChildren: './public/login/login.module#LoginPageModule' },
+  { path: 'forgot', loadChildren: './public/forgot/forgot.module#ForgotPageModule' },
+
+  { path: 'teachers',
+    loadChildren: './teachers/teachers.module#TeachersPageModule',
+    canActivate: [AuthGuardService] 
   },
-  {
-    path: 'home',
-    loadChildren: './home/home.module#HomePageModule'
+  { 
+    path: 'teacher-detail', 
+    loadChildren: './teacher-detail/teacher-detail.module#TeacherDetailPageModule',
+    canActivate: [AuthGuardService] 
   },
-  {
-    path: 'list',
-    loadChildren: './list/list.module#ListPageModule'
+  { path: 'teacher-add', 
+    loadChildren: './teacher-add/teacher-add.module#TeacherAddPageModule',
+    canActivate: [AuthGuardService]
+  },
+  { path: 'settings', 
+    loadChildren: './settings/settings.module#SettingsPageModule',
+    canActivate: [AuthGuardService]
   }
 ];
 

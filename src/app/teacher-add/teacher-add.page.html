@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>New Teacher</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item lines="none">
+      <ion-label>Name:</ion-label>
+      <input type="text" name="nome" id="nome" [(ngModel)]="name">
+  </ion-item>
+
+  <ion-item lines="none">
+      <ion-label>Born Date:</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" placeholder="Click here" [(ngModel)]="borndate"></ion-datetime>
+  </ion-item>
+  
+  <ion-item lines="none">
+      <ion-label>Active:</ion-label>
+      <ion-toggle checked color="dark" [(ngModel)]="status"></ion-toggle>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-textarea placeholder="Type the curriculum here" [(ngModel)]="curriculum"></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="none">
+      <ion-button (click)="insertTeacher()" color="dark">
+        Create new teacher
+      </ion-button>  
+  </ion-item>
+  
+    
+</ion-content>

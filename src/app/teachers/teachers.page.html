@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="end" name="exit"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="add()">
+        <ion-icon slot="start" name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Teachers List</ion-title>
+  </ion-toolbar>
+
+  <ion-searchbar placeholder="Search" animated showCancelButton cancelButtonText="Cancel" (ionInput)="search()" [(ngModel)]="fieldSearch"></ion-searchbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item *ngFor="let teacher of data" (click)="openDetail(teacher.id)">
+      <ion-label>{{teacher.nome}}</ion-label> 
+      <ion-icon slot="end" name="create"></ion-icon>   
+      <ion-icon slot="end" name="close-circle" color="red"></ion-icon>   
+  </ion-item>
+</ion-content>

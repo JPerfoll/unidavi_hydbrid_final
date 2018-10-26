@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Teacher Detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-img [src]="teacher.foto"></ion-img>
+      <ion-item lines="none">
+        <ion-label>{{teacher.nome}}</ion-label>
+        <ion-checkbox checked="true" color="dark"></ion-checkbox>
+      </ion-item>           
+      <ion-item lines="none">
+      <ion-label>Born Date</ion-label>
+      <ion-datetime display-format="DD.MM.YYYY" value="{{teacher.nascimento}}"></ion-datetime>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      {{teacher.curriculo}}
+
+      <ion-item lines="none">
+        <ion-button (click)="delete(teacher.id)" color="dark">
+          Excluir
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

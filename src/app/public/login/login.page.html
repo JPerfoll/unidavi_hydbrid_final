@@ -1,0 +1,19 @@
+<ion-header>
+
+</ion-header>
+
+<ion-content padding>
+    <div text-center><h4>Login</h4></div><br/><br/>
+
+    <ion-input type="text" placeholder="User" [(ngModel)]="user"></ion-input><br/><br/>
+    <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input><br/><br/><br/>
+
+    <ion-button (click)="login()" expand="block" color="dark">
+        Login
+    </ion-button>
+
+    <ion-button color="light" expand="block" size="small">
+        Forgot Password?
+    </ion-button>
+
+</ion-content>
