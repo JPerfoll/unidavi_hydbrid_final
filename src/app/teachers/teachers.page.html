@@ -17,7 +17,7 @@
     <ion-title>Teachers List</ion-title>
   </ion-toolbar>
 
-  <ion-searchbar placeholder="Search" animated showCancelButton cancelButtonText="Cancel" (ionInput)="search()" [(ngModel)]="fieldSearch"></ion-searchbar>
+  <ion-searchbar #searchbar placeholder="Search" animated showCancelButton cancelButtonText="Cancel" (ionInput)="search($event)"></ion-searchbar>
 </ion-header>
 
 <ion-content padding>

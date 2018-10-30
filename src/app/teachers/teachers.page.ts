@@ -39,10 +39,12 @@ export class TeachersPage implements OnInit {
     this.teachersService.getById(id);  
   }
 
-  search() {
-    console.log(this.fieldSearch);
-    if ((this.fieldSearch != "") && (this.fieldSearch != undefined)) {
-      let getDbNamePromise = this.teachersService.getByName(this.fieldSearch);
+  search(texto: any) {
+    let textoPesquisa = texto.target.value;
+    console.log(textoPesquisa);
+    
+    if ((textoPesquisa != "") && (textoPesquisa != undefined)) {
+      let getDbNamePromise = this.teachersService.getByName(textoPesquisa);
 
       Promise.all([getDbNamePromise]).then((result: any[]) => {
         this.data = result[0];      
