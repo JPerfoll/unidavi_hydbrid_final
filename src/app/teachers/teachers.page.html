@@ -21,9 +21,20 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-refresher slot="fixed" (ionRefresh)="loadTeachers($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-item *ngFor="let teacher of data" (click)="openDetail(teacher.id)">
       <ion-label>{{teacher.nome}}</ion-label> 
       <ion-icon slot="end" name="create"></ion-icon>   
       <ion-icon slot="end" name="close-circle" color="red"></ion-icon>   
   </ion-item>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadTeachers($event)" *ngIf="totalPage < totalData">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>

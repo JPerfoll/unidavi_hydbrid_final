@@ -16,18 +16,24 @@ export class TeachersPage implements OnInit {
   constructor(private router: Router, private authService: AuthenticationService, private teachersService: TeachersService) { }
 
   ngOnInit() {
-    this.loadTeachers();
+    this.loadTeachers(null);
   }
 
   add() {
     this.router.navigate(['teacher-add']);
   }
 
-  loadTeachers() {
+  loadTeachers(event) {
     let getDbPromise = this.teachersService.getAll();
 
     Promise.all([getDbPromise]).then((result: any[]) => {
-      this.data = result[0];      
+      this.data = result[0];
+
+      // Se o event for nulo significa que não foi chamado pelo pull refresh
+      if (event != null) {
+        // Se for chamado pelo pull refresh deve usar o complete() para sumir o loading
+        event.target.complete();
+      }
     });
   }
 
@@ -41,8 +47,7 @@ export class TeachersPage implements OnInit {
 
   search(texto: any) {
     let textoPesquisa = texto.target.value;
-    console.log(textoPesquisa);
-    
+        
     if ((textoPesquisa != "") && (textoPesquisa != undefined)) {
       let getDbNamePromise = this.teachersService.getByName(textoPesquisa);
 
@@ -50,7 +55,7 @@ export class TeachersPage implements OnInit {
         this.data = result[0];      
       });
     } else {
-      this.loadTeachers();
+      this.loadTeachers(null);
     }
   }
 

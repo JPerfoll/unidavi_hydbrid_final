@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-teacher-add',
@@ -14,12 +15,12 @@ export class TeacherAddPage implements OnInit {
   status: any;
   curriculum: any;
 
-  constructor(private router: Router, private teachersService: TeachersService) { }
+  constructor(private router: Router, private teachersService: TeachersService, private alertController: AlertController) { }
 
   ngOnInit() {
   }
 
-  insertTeacher() {
+  async insertTeacher() {
     let teacher = new Teacher;
 
     teacher.nome = this.name;
@@ -28,6 +29,14 @@ export class TeacherAddPage implements OnInit {
     teacher.curriculo = this.curriculum;
 
     if (this.teachersService.insert(teacher)) {
+      const alert = await this.alertController.create({
+        header: 'Confirmation',
+        message: 'Saved successfully!',
+        buttons: ['OK']
+      });
+  
+      await alert.present();
+
       this.router.navigate(['teachers']);
     };
   }

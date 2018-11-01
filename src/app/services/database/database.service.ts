@@ -25,7 +25,7 @@ export class DatabaseService {
         this.createTables(db); 
 
         // Insere Dados Padrões
-        this.insertDefaultItems(db);
+        // this.insertDefaultItems(db);
 
       })
       .catch(e => console.log(e));
@@ -33,7 +33,7 @@ export class DatabaseService {
 
   private createTables(db: SQLiteObject) {
     // Criando as tabelas
-    db.sqlBatch([
+    return db.sqlBatch([
       ['CREATE TABLE IF NOT EXISTS professor (id integer primary key NOT NULL, nome VARCHAR(240), nascimento DATE, foto VARCHAR(250), curriculo VARCHAR(3000), status CHAR(1))'],
       ['CREATE TABLE IF NOT EXISTS turma (id integer primary key NOT NULL, name VARCHAR(240), ementa VARCHAR(3000), data_inicio DATE, data_fim DATE, professor integer, FOREIGN KEY(professor) REFERENCES professor(id))'],
     ])

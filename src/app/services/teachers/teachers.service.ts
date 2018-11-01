@@ -47,7 +47,7 @@ export class TeachersService {
   getAll(): Promise<any[]> {
     return new Promise((resolve, reject) => {
       this.databaseService.getDB().then((db: SQLiteObject) => {
-        let sql = "SELECT * FROM professor";
+        let sql = `SELECT * FROM professor ORDER BY upper(nome)`;
   
         db.executeSql(sql, []).then((data: any) => {
           if (data.rows.length > 0) {
@@ -60,10 +60,22 @@ export class TeachersService {
 
             resolve(teachers);
           } else {
-            reject("Erro ao carregar professores.");
+            this.http.get(`${API_URL}/unidavi/professor.php`).subscribe(data => {
+              let newTeacher = new Teacher;
+              let teachers: any[]=[];
+
+              for (var i = 0; i < data['length']; i++) {
+                newTeacher = data[i];
+                this.insert(newTeacher);
+                teachers.push(newTeacher);
+              }
+
+              resolve(teachers);
+            })
           }
         }).catch((Error) => {
-          console.log("Erro Execute SQL: ", Error);
+          reject("Erro ao carregar professores: " + Error);
+          console.log("Erro ao carregar professores: ", Error);
         });
       }).catch((Error) => {
         console.log("Erro GETDB: " + Error);

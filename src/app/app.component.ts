@@ -51,7 +51,7 @@ export class AppComponent {
             this.router.navigate(['teachers']);
           }).catch(Error => {
             console.log('Erro ao criar database ', Error);
-            this.router.navigate(['teachers']);
+            //this.router.navigate(['teachers']);
           });          
         } else {
           this.router.navigate(['login']);
