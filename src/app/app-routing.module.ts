@@ -9,18 +9,18 @@ const routes: Routes = [
 
   { path: 'teachers',
     loadChildren: './teachers/teachers.module#TeachersPageModule',
-    canActivate: [AuthGuardService] 
+    canActivate: [AuthGuardService]
   },
-  { 
+  {
     path: 'teacher-detail', 
     loadChildren: './teacher-detail/teacher-detail.module#TeacherDetailPageModule',
-    canActivate: [AuthGuardService] 
+    canActivate: [AuthGuardService]
   },
-  { path: 'teacher-add', 
+  { path: 'teacher-add',
     loadChildren: './teacher-add/teacher-add.module#TeacherAddPageModule',
     canActivate: [AuthGuardService]
   },
-  { path: 'settings', 
+  { path: 'settings',
     loadChildren: './settings/settings.module#SettingsPageModule',
     canActivate: [AuthGuardService]
   }

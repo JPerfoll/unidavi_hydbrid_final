@@ -29,7 +29,8 @@ export class TeacherDetailPage implements OnInit {
           handler: (blah) => {
             // Do nothing
           }
-        }, {
+        }, 
+        {
           text: 'Yes',
           handler: () => {
             this.teachersService.deleteById(id);

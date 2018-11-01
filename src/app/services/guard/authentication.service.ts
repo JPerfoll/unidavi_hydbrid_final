@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Storage } from '@ionic/storage';
 
 const TOKEN_KEY = 'auth-token';
+const TOKEN_EXPIRATION = 'auth-token-expiration';
 const API_URL = environment.apiURL;
 
 const httpOptions = {
@@ -39,7 +40,7 @@ export class AuthenticationService {
     const postedData = {usuario: credentials.user, senha: credentials.password};
 
     this.http.post(`${API_URL}/unidavi/usuario.php`, postedData, httpOptions).subscribe(result => {
-      if (result['success'] == true) {
+      if (result['success'] === true) {
         console.log('Token', result['data'].token);
         return this.storage.set(TOKEN_KEY, result['data'].token).then(() => {
           this.authenticationState.next(true);

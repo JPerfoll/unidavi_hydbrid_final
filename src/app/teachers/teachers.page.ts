@@ -2,6 +2,7 @@ import { Component, OnInit, DoCheck, AfterContentInit, AfterViewChecked, AfterVi
 import { AuthenticationService } from '../services/guard/authentication.service';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-teachers',
@@ -13,7 +14,7 @@ export class TeachersPage implements OnInit {
   data: any;
   fieldSearch: any;
 
-  constructor(private router: Router, private authService: AuthenticationService, private teachersService: TeachersService) { }
+  constructor(private router: Router, private authService: AuthenticationService, private teachersService: TeachersService, private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.loadTeachers(null);
@@ -23,18 +24,27 @@ export class TeachersPage implements OnInit {
     this.router.navigate(['teacher-add']);
   }
 
-  loadTeachers(event) {
+  async loadTeachers(event) {
+    const loading = await this.loadingController.create({
+      animated: true,
+      duration: 5000,
+      message: 'Loading...',      
+      cssClass: 'custom-class custom-loading'
+    });
+
+    loading.present();
+
     let getDbPromise = this.teachersService.getAll();
 
     Promise.all([getDbPromise]).then((result: any[]) => {
       this.data = result[0];
 
-      // Se o event for nulo significa que não foi chamado pelo pull refresh
       if (event != null) {
-        // Se for chamado pelo pull refresh deve usar o complete() para sumir o loading
-        event.target.complete();
+        event.target.complete();        
       }
-    });
+
+      loading.dismiss();
+    });    
   }
 
   logout() {
