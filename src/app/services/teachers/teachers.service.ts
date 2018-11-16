@@ -16,7 +16,7 @@ export class Teacher {
   id: number;
   nome: string;
   nascimento: Date;
-  foto: string;
+  foto: any;
   curriculo: string;
   status: string;
 }
@@ -164,5 +164,17 @@ export class TeachersService {
         console.log("Erro ao inserir: ", Error);
       });
     });
+  }
+
+  update(teacher: Teacher) {
+    return this.databaseService.getDB().then((db: SQLiteObject) => {
+        let sql = 'update professor set nome = ?, nascimento = ?, foto = ?, curriculo = ?, status = ? where id = ?';
+        let parameters = [teacher.nome, teacher.nascimento, teacher.foto, teacher.curriculo, teacher.status, teacher.id];
+ 
+        return db.executeSql(sql, parameters).catch((Error) => {
+          console.log("Erro ao realizar update: ", Error)
+        });
+      })
+      .catch((e) => console.error(e));
   }
 }

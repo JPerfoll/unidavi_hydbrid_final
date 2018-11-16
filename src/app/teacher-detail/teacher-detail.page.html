@@ -10,10 +10,13 @@
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <ion-img [src]="teacher.foto"></ion-img>
+      <img src="{{teacher.foto}}" />
+      <ion-button (click)="takePicture()">
+        Tirar Foto
+      </ion-button>
       <ion-item lines="none">
         <ion-label>{{teacher.nome}}</ion-label>
-        <ion-checkbox checked="true" color="dark"></ion-checkbox>
+        <ion-checkbox checked="{{status}}" color="dark"></ion-checkbox>
       </ion-item>           
       <ion-item lines="none">
       <ion-label>Born Date</ion-label>

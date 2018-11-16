@@ -9,6 +9,14 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-item>
+    <ion-label>Photo:</ion-label>
+    <ion-img src="{{base64Image}}"></ion-img>
+    <ion-button (click)="takePicture()">
+      Take Picture
+    </ion-button>
+  </ion-item>
+
   <ion-item lines="none">
       <ion-label>Name:</ion-label>
       <input type="text" name="nome" id="nome" [(ngModel)]="name">

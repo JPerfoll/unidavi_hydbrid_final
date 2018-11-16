@@ -20,13 +20,8 @@ export class DatabaseService {
   public createDatabase() {
     return this.getDB()
       .then((db: SQLiteObject) => {
-
         // Criando as tabelas
-        this.createTables(db); 
-
-        // Insere Dados Padrões
-        // this.insertDefaultItems(db);
-
+        this.createTables(db);
       })
       .catch(e => console.log(e));
   }
@@ -39,25 +34,5 @@ export class DatabaseService {
     ])
     .then(() => console.log('Tabelas criadas'))
     .catch(Error => console.error('Erro ao criar as tabelas', Error));
-  }
-
-  private insertDefaultItems(db: SQLiteObject) {
-    db.executeSql('select COUNT(id) as qtd from professor', [])
-    .then((data: any) => {
-      //Se não existe nenhum registro
-      if (data.rows.item(0).qtd == 0) {
- 
-        // Criando as tabelas
-        db.sqlBatch([
-          ['insert into professor (nome) values (?)', ['Jean']],
-          ['insert into professor (nome) values (?)', ['Giovani']],
-          ['insert into professor (nome) values (?)', ['Lucas']]
-        ])
-          .then(() => console.log('Dados padrões incluídos'))
-          .catch(e => console.error('Erro ao incluir dados padrões', e));
- 
-      }
-    })
-    .catch(e => console.error('Erro ao consultar a qtd de categorias', e));
   }
 }

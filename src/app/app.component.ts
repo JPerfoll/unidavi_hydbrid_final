@@ -16,16 +16,19 @@ export class AppComponent {
     {
       title: 'New Teacher',
       url: '/teacher-add',
-      icon: 'add'
+      icon: 'add',
+      nameFunction: ''
     },
     {
       title: 'Teachers List',
       url: '/teachers',
-      icon: 'list'
+      icon: 'list',
+      nameFunction: ''
     },
     {
       title: 'Logout',
-      icon: 'exit'
+      icon: 'exit',
+      nameFunction: 'logout'
     }
   ];
 
@@ -58,5 +61,11 @@ export class AppComponent {
         }
       });
     });
+  }
+
+  executeLogout(name) {
+    if ((name != '') && (name == 'logout')) {
+      this.authenticationService.logout();
+    }
   }
 }

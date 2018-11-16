@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { AlertController } from '@ionic/angular';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-teacher-detail',
@@ -9,12 +11,15 @@ import { AlertController } from '@ionic/angular';
 })
 export class TeacherDetailPage implements OnInit {
 
-  constructor(private teachersService: TeachersService, private alertController: AlertController) { }
+  constructor(private teachersService: TeachersService, private alertController: AlertController, private camera: Camera) { }
 
   teacher: Teacher;
+  status: any;
 
   ngOnInit() {
     this.teacher = this.teachersService.teacher;
+
+    this.status = this.teacher.status == '0' ? false : true;
   }
 
   async delete(id) {
@@ -40,6 +45,22 @@ export class TeacherDetailPage implements OnInit {
     });
 
     await alert.present();    
+  }
+
+  takePicture() {
+    const options: CameraOptions = {
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      this.teacher.foto = 'data:image/jpeg;base64,' + imageData;
+      this.teachersService.update(this.teacher);
+    }, (err) => {
+      console.log(err);      
+    });
   }
 
 }
