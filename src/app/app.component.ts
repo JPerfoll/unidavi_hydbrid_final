@@ -6,12 +6,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthenticationService } from './services/guard/authentication.service';
 import { Router } from '@angular/router';
 import { DatabaseService } from './services/database/database.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+  userName: String;
+
   public appPages = [
     {
       title: 'New Teacher',
@@ -23,6 +26,12 @@ export class AppComponent {
       title: 'Teachers List',
       url: '/teachers',
       icon: 'list',
+      nameFunction: ''
+    },
+    {
+      title: 'Settings',
+      url: '/settings',
+      icon: 'settings',
       nameFunction: ''
     },
     {
@@ -38,7 +47,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private storage: Storage
   ) {
     this.initializeApp();
   }
@@ -51,10 +61,15 @@ export class AppComponent {
       this.authenticationService.authenticationState.subscribe(state => {
         if (state) {
           this.databaseService.createDatabase().then(() => {
+            this.storage.get("user-name").then((result) => {
+              console.log(result);
+              
+              this.userName = result;
+            });
+
             this.router.navigate(['teachers']);
           }).catch(Error => {
             console.log('Erro ao criar database ', Error);
-            //this.router.navigate(['teachers']);
           });          
         } else {
           this.router.navigate(['login']);
