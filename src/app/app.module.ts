@@ -13,7 +13,6 @@ import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { TeachersService } from './services/teachers/teachers.service';
 import { SQLite } from '@ionic-native/sqlite/ngx';
-import { DatabaseService } from './services/database/database.service';
 import { Camera } from '@ionic-native/camera/ngx';
 
 @NgModule({

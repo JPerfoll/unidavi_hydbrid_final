@@ -3,33 +3,51 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Teacher Detail</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editForm()" *ngIf="!this.editable">
+        Edit
+      </ion-button>
+      <ion-button (click)="editForm()" *ngIf="this.editable">
+        Cancel
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <img src="{{teacher.foto}}" />
-      <ion-button (click)="takePicture()">
+      <img src="{{teacher.foto}}" *ngIf="teacher.foto != ''"/>
+      <ion-button (click)="takePicture()" [disabled]="!this.editable">
         Tirar Foto
       </ion-button>
-      <ion-item lines="none">
-        <ion-label>{{teacher.nome}}</ion-label>
-        <ion-checkbox checked="{{status}}" color="dark"></ion-checkbox>
-      </ion-item>           
-      <ion-item lines="none">
+      <ion-item>
+        <ion-label>Name:</ion-label>
+        <ion-input type="text" placeholder="Name" value="{{teacher.nome}}" [(ngModel)]="name" [disabled]="!this.editable" ></ion-input>
+      </ion-item>     
+      <ion-item>
+        <ion-label>Active:</ion-label>
+        <ion-checkbox checked="{{status}}" color="dark" [disabled]="!this.editable" [(ngModel)]="active"></ion-checkbox>
+      </ion-item>      
+      <ion-item>
       <ion-label>Born Date</ion-label>
-      <ion-datetime display-format="DD.MM.YYYY" value="{{teacher.nascimento}}"></ion-datetime>
+      <ion-datetime display-format="DD.MM.YYYY" value="{{teacher.nascimento}}" [(ngModel)]="bornDate" [disabled]="!this.editable"></ion-datetime>
       </ion-item>
     </ion-card-header>
     <ion-card-content>
-      {{teacher.curriculo}}
+      <ion-textarea value="{{teacher.curriculo}}" [(ngModel)]="curriculum" [disabled]="!this.editable" ></ion-textarea>      
 
       <ion-item lines="none">
-        <ion-button (click)="delete(teacher.id)" color="dark">
-          Excluir
-        </ion-button>
+        <ion-buttons slot="start">
+          <ion-button (click)="delete(teacher.id)" color="dark" *ngIf="!this.editable">
+            Excluir
+          </ion-button>
+
+          <ion-button (click)="updateForm()" color="dark" *ngIf="this.editable">
+            Salvar
+          </ion-button>
+        </ion-buttons>        
       </ion-item>
     </ion-card-content>
   </ion-card>

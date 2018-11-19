@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { AlertController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-teacher-detail',
@@ -14,12 +13,24 @@ export class TeacherDetailPage implements OnInit {
   constructor(private teachersService: TeachersService, private alertController: AlertController, private camera: Camera) { }
 
   teacher: Teacher;
-  status: any;
+  editable: boolean;
+  title: String;
+
+  name: any;
+  active: any;
+  bornDate: any;
+  curriculum: any;  
 
   ngOnInit() {
+    this.title = 'Teacher Detail';
+    this.editable = false;
+
     this.teacher = this.teachersService.teacher;
 
-    this.status = this.teacher.status == '0' ? false : true;
+    this.name = this.teacher.nome;
+    this.active = this.teacher.status == '0' ? false : true;
+    this.bornDate = this.teacher.nascimento;
+    this.curriculum = this.teacher.curriculo;
   }
 
   async delete(id) {
@@ -47,6 +58,22 @@ export class TeacherDetailPage implements OnInit {
     await alert.present();    
   }
 
+  editForm() {
+    this.editable = !this.editable;
+    this.title = this.editable == true ? 'Teacher Edit' : 'Teacher Detail';
+  }
+
+  updateForm() {
+    this.editable = false;
+
+    this.teacher.nome = this.name;
+    this.teacher.status = this.active == false ? "0" : "1"; 
+    this.teacher.nascimento = this.bornDate;
+    this.teacher.curriculo = this.curriculum;
+    
+    this.teachersService.update(this.teacher);
+  }
+
   takePicture() {
     const options: CameraOptions = {
       quality: 50,
@@ -57,7 +84,6 @@ export class TeacherDetailPage implements OnInit {
 
     this.camera.getPicture(options).then((imageData) => {
       this.teacher.foto = 'data:image/jpeg;base64,' + imageData;
-      this.teachersService.update(this.teacher);
     }, (err) => {
       console.log(err);      
     });

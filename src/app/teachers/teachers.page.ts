@@ -1,8 +1,9 @@
-import { Component, OnInit, DoCheck, AfterContentInit, AfterViewChecked, AfterViewInit, AfterContentChecked, OnDestroy } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AuthenticationService } from '../services/guard/authentication.service';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-teachers',
@@ -11,6 +12,7 @@ import { LoadingController } from '@ionic/angular';
 })
 export class TeachersPage implements OnInit {
 
+  TIME_TO_EXECUTE = 5000;
   data: any;
   fieldSearch: any;
 
@@ -69,5 +71,7 @@ export class TeachersPage implements OnInit {
     }
   }
 
-  
+  // timeOutTest = setInterval(() => {
+  //   console.log('Teste de MS');
+  // }, this.TIME_TO_EXECUTE);
 }
