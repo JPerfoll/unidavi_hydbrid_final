@@ -31,6 +31,7 @@ export class DatabaseService {
     return db.sqlBatch([
       ['CREATE TABLE IF NOT EXISTS professor (id integer primary key NOT NULL, nome VARCHAR(240), nascimento DATE, foto VARCHAR(250), curriculo VARCHAR(3000), status CHAR(1))'],
       ['CREATE TABLE IF NOT EXISTS turma (id integer primary key NOT NULL, name VARCHAR(240), ementa VARCHAR(3000), data_inicio DATE, data_fim DATE, professor integer, FOREIGN KEY(professor) REFERENCES professor(id))'],
+      ['CREATE TABLE IF NOT EXISTS configuracoes (usuario_id integer primary key NOT NULL, idioma VARCHAR(15), nome VARCHAR(250))']
     ])
     .then(() => console.log('Tabelas criadas'))
     .catch(Error => console.error('Erro ao criar as tabelas', Error));

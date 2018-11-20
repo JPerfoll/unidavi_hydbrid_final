@@ -9,12 +9,12 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-label>Photo:</ion-label>
-    <ion-img src="{{base64Image}}"></ion-img>
-    <ion-button (click)="takePicture()">
-      Take Picture
-    </ion-button>
+  <ion-item lines="none">
+    <ion-avatar slot="start">
+        <ion-img *ngIf="base64Image" [src]="base64Image" ></ion-img>
+    </ion-avatar>
+    <ion-icon slot="start" name="create" (click)="alterPicture()"></ion-icon>
+    <ion-label>Picture</ion-label>
   </ion-item>
 
   <ion-item lines="none">

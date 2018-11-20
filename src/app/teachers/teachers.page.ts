@@ -12,29 +12,42 @@ import { LoadingController } from '@ionic/angular';
 })
 export class TeachersPage implements OnInit {
 
-  TIME_TO_EXECUTE = 5000;
+  TIME_TO_EXECUTE = 30000;
   data: any;
   fieldSearch: any;
+  interval: any;
 
   constructor(private router: Router, private authService: AuthenticationService, private teachersService: TeachersService, private loadingController: LoadingController) { }
 
   ngOnInit() {
-    this.loadTeachers(null);
+    // Task que lê/envia as alterações do/para o backend
+    this.interval = setInterval(() => { 
+      this.sendTeachers();
+      this.loadTeachers(null, false);      
+    }, this.TIME_TO_EXECUTE);
+  }
+
+  ionViewWillEnter(){
+    this.loadTeachers(null, true);    
   }
 
   add() {
     this.router.navigate(['teacher-add']);
   }
 
-  async loadTeachers(event) {
-    const loading = await this.loadingController.create({
-      animated: true,
-      duration: 5000,
-      message: 'Loading...',      
-      cssClass: 'custom-class custom-loading'
-    });
+  async loadTeachers(event, showLoading) {
+    let loading;
 
-    loading.present();
+    if (showLoading) {
+      loading = await this.loadingController.create({
+        animated: true,
+        duration: 5000,
+        message: 'Loading...',      
+        cssClass: 'custom-class custom-loading'
+      });
+  
+      loading.present();
+    }
 
     let getDbPromise = this.teachersService.getAll();
 
@@ -45,11 +58,14 @@ export class TeachersPage implements OnInit {
         event.target.complete();        
       }
 
-      loading.dismiss();
+      if (showLoading) {
+        loading.dismiss();
+      }      
     });    
   }
 
   logout() {
+    clearInterval(this.interval);
     this.authService.logout();
   }
 
@@ -67,11 +83,15 @@ export class TeachersPage implements OnInit {
         this.data = result[0];      
       });
     } else {
-      this.loadTeachers(null);
+      this.loadTeachers(null, true);
     }
   }
 
-  // timeOutTest = setInterval(() => {
-  //   console.log('Teste de MS');
-  // }, this.TIME_TO_EXECUTE);
+  async sendTeachers() {    
+    let sendDbPromise = this.teachersService.sendAll(this.data);
+
+    Promise.all([sendDbPromise]).catch((Error) => {
+      console.log("Erro ao enviar professores: ", Error);      
+    });
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeachersService, Teacher } from '../services/teachers/teachers.service';
 import { AlertController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-teacher-detail',
@@ -10,7 +11,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 })
 export class TeacherDetailPage implements OnInit {
 
-  constructor(private teachersService: TeachersService, private alertController: AlertController, private camera: Camera) { }
+  constructor(private teachersService: TeachersService, private alertController: AlertController, private camera: Camera, private actionSheetController: ActionSheetController) { }
 
   teacher: Teacher;
   editable: boolean;
@@ -74,7 +75,7 @@ export class TeacherDetailPage implements OnInit {
     this.teachersService.update(this.teacher);
   }
 
-  takePicture() {
+  pictureCamera() {
     const options: CameraOptions = {
       quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -84,9 +85,57 @@ export class TeacherDetailPage implements OnInit {
 
     this.camera.getPicture(options).then((imageData) => {
       this.teacher.foto = 'data:image/jpeg;base64,' + imageData;
+      this.teachersService.update(this.teacher);
     }, (err) => {
       console.log(err);      
     });
+  }
+
+  pictureGallery() {
+    const options: CameraOptions = {
+        quality: 70,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        saveToPhotoAlbum: false
+    };
+
+    this.camera.getPicture(options).then((imageData) => {
+      this.teacher.foto = 'data:image/jpeg;base64,' + imageData;
+      this.teachersService.update(this.teacher);
+    }, (err) => {
+      console.log(err);  
+    });
+  }
+
+  async alterPicture(id) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Choose an option',
+      buttons: [
+          {
+              text: 'Gallery',
+              icon: 'image',
+              handler: () => {
+                this.pictureGallery();
+              }
+          }, 
+          {
+              text: 'Camera',
+              icon: 'camera',
+              handler: () => {
+                this.pictureCamera();
+              }
+          },
+          {
+              text: 'Cancel',
+              icon: 'close',
+              role: 'cancel',
+              handler: () => {
+                //
+              }
+          }]
+    });
+
+    await actionSheet.present();
   }
 
 }

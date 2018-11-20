@@ -18,10 +18,14 @@
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <img src="{{teacher.foto}}" *ngIf="teacher.foto != ''"/>
-      <ion-button (click)="takePicture()" [disabled]="!this.editable">
-        Tirar Foto
-      </ion-button>
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+            <ion-img *ngIf="teacher.foto" [src]="teacher.foto" ></ion-img>
+        </ion-avatar>
+        <ion-icon slot="start" name="create" (click)="alterPicture()"></ion-icon>
+        <ion-label>Picture</ion-label>
+      </ion-item>
+
       <ion-item>
         <ion-label>Name:</ion-label>
         <ion-input type="text" placeholder="Name" value="{{teacher.nome}}" [(ngModel)]="name" [disabled]="!this.editable" ></ion-input>

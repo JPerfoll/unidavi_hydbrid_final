@@ -9,6 +9,7 @@ import * as moment from 'moment';
 const TOKEN_KEY = 'auth-token';
 const TOKEN_EXPIRATION = 'auth-token-expiration';
 const USER_NAME = 'user-name';
+const USER_ID = 'user-id';
 const API_URL = environment.apiURL;
 
 const httpOptions = {
@@ -59,9 +60,11 @@ export class AuthenticationService {
       if (result['success'] === true) {
         return this.storage.set(TOKEN_EXPIRATION, date).then(() => {
           this.storage.set(TOKEN_KEY, result['data'].token).then(() => {
-            this.storage.set(USER_NAME, postedData.usuario).then(() => {
-              this.authenticationState.next(true);
-            })            
+            this.storage.set(USER_ID, result['data'].id).then(() => {
+              this.storage.set(USER_NAME, postedData.usuario).then(() => {
+                this.authenticationState.next(true);
+              });          
+            })              
           });
         });         
       } else {
@@ -98,8 +101,10 @@ export class AuthenticationService {
       // Se faz mais de uma hora, remove o token e a data de expiração
       if (diff >= 1) {
         return this.storage.remove(TOKEN_EXPIRATION).then(() => {
-          this.storage.remove(TOKEN_KEY).then(() => {            
-            this.authenticationState.next(false);
+          this.storage.remove(TOKEN_KEY).then(() => {
+            this.storage.remove(USER_NAME).then(() => {
+              this.authenticationState.next(false);
+            });            
           });
         });        
       } else { // Se não faz mais de uma hora, renova a data de expiração para a data atual

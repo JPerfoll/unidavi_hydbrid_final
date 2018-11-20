@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { DatabaseService } from '../database/database.service';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 
 const API_URL = environment.apiURL;
 
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +29,7 @@ export class TeachersService {
 
   teacher: Teacher;
   teachers: any;
+  dataDb: any;
 
   constructor(private http: HttpClient, private databaseService: DatabaseService, private router: Router) { }
 
@@ -49,30 +53,43 @@ export class TeachersService {
       this.databaseService.getDB().then((db: SQLiteObject) => {
         let sql = `SELECT * FROM professor ORDER BY upper(nome)`;
   
-        db.executeSql(sql, []).then((data: any) => {
+        db.executeSql(sql, []).then((data: any) => {          
+          this.dataDb = data;  
+          let teachersList: any[]=[];        
+
           if (data.rows.length > 0) {
-            let teachers: any[]=[];
+            console.log(this.dataDb);
   
-            for (var i = 0; i < data.rows.length; i++) {
+            for (let i = 0; i < data.rows.length; i++) {
               var teacher = data.rows.item(i);
-              teachers.push(teacher);
+              teachersList.push(teacher);
             }
+          } 
 
-            resolve(teachers);
-          } else {
-            this.http.get(`${API_URL}/unidavi/professor.php`).subscribe(data => {
-              let newTeacher = new Teacher;
-              let teachers: any[]=[];
+          this.http.get(`${API_URL}/unidavi/professor.php`).subscribe(dataGet => {
+            let newTeacher = new Teacher;
+            let bAdicionaArray = true;
+            
+            for (let j = 0; j < dataGet['length']; j++) {
+              newTeacher = dataGet[j];
+              this.insert(newTeacher);
 
-              for (var i = 0; i < data['length']; i++) {
-                newTeacher = data[i];
-                this.insert(newTeacher);
-                teachers.push(newTeacher);
-              }
-
-              resolve(teachers);
-            })
-          }
+              if (this.dataDb.rows.length > 0) {
+                for (let k = 0; k < this.dataDb.rows.length; k++) {
+                  if (this.dataDb.rows.item(k).id == newTeacher.id) {
+                    bAdicionaArray = false;
+                    break;
+                  }
+                }
+              } 
+              
+              if (bAdicionaArray) {
+                teachersList.push(newTeacher);  
+              }              
+            }
+          });
+          
+          resolve(teachersList);
         }).catch((Error) => {
           reject("Erro ao carregar professores: " + Error);
           console.log("Erro ao carregar professores: ", Error);
@@ -157,8 +174,8 @@ export class TeachersService {
 
   insert(teacher: Teacher) {
     return this.databaseService.getDB().then((db: SQLiteObject) => {
-      let sql = "insert into professor(nome, nascimento, foto, curriculo, status) values (?, ?, ?, ?, ?)";
-      let parameters = [teacher.nome, teacher.nascimento, teacher.foto, teacher.curriculo, teacher.status];
+      let sql = "insert or replace into professor(id, nome, nascimento, foto, curriculo, status) values (?, ?, ?, ?, ?, ?)";
+      let parameters = [teacher.id, teacher.nome, teacher.nascimento, teacher.foto, teacher.curriculo, teacher.status];
 
       return db.executeSql(sql, parameters).catch((Error) => {
         console.log("Erro ao inserir: ", Error);
@@ -177,4 +194,18 @@ export class TeachersService {
       })
       .catch((e) => console.error(e));
   }
+
+  sendAll(list: any): Promise<any[]> {    
+    return new Promise((resolve, reject) => {
+      let result: any;
+      const postedData = {
+        json: list
+      };
+
+      result = this.http.post(`${API_URL}/unidavi/professor_insert.php`, JSON.stringify(postedData), httpOptions).subscribe((resultado) => {        
+        result = resultado;
+        resolve(result);
+      })
+    });
+  }  
 }

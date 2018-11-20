@@ -3,6 +3,7 @@ import { TeachersService, Teacher } from '../services/teachers/teachers.service'
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-teacher-add',
@@ -18,7 +19,7 @@ export class TeacherAddPage implements OnInit {
   base64Image: any;
   photo: any;
 
-  constructor(private router: Router, private teachersService: TeachersService, private alertController: AlertController, private camera: Camera) { }
+  constructor(private router: Router, private teachersService: TeachersService, private alertController: AlertController, private camera: Camera, private actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
   }
@@ -45,7 +46,7 @@ export class TeacherAddPage implements OnInit {
     };
   }
 
-  takePicture() {
+  pictureCamera() {
     const options: CameraOptions = {
       quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -60,4 +61,48 @@ export class TeacherAddPage implements OnInit {
     });
   }
 
+  pictureGallery() {
+    const options: CameraOptions = {
+        quality: 70,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        saveToPhotoAlbum: false
+    };
+
+    this.camera.getPicture(options).then((imageData) => {
+      this.base64Image = 'data:image/jpeg;base64,' + imageData;
+    }, (err) => {
+      console.log(err);  
+    });
+  }
+
+  async alterPicture(id) {
+    const actionSheet = await this.actionSheetController.create({
+        header: 'Choose an option',
+        buttons: [
+            {
+                text: 'Gallery',
+                icon: 'image',
+                handler: () => {
+                    this.pictureGallery();
+                }
+            }, 
+            {
+                text: 'Camera',
+                icon: 'camera',
+                handler: () => {
+                    this.pictureCamera();
+                }
+            },
+            {
+                text: 'Cancel',
+                icon: 'close',
+                role: 'cancel',
+                handler: () => {
+
+                }
+            }]
+    });
+    await actionSheet.present();
+  }
 }

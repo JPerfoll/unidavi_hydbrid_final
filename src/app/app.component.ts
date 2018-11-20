@@ -61,9 +61,7 @@ export class AppComponent {
       this.authenticationService.authenticationState.subscribe(state => {
         if (state) {
           this.databaseService.createDatabase().then(() => {
-            this.storage.get("user-name").then((result) => {
-              console.log(result);
-              
+            this.storage.get("user-name").then((result) => {              
               this.userName = result;
             });
 

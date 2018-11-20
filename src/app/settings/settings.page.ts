@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
 
-  constructor() { }
+  userId: any;
+  language: any;
+  name: any;
+
+  constructor(private storage: Storage, private router: Router) { }
 
   ngOnInit() {
+    this.storage.get('user-id').then((result) => {
+      this.userId = result;
+    });
+  }
+
+  goToList() {
+    this.router.navigate(['teachers']);
   }
 
 }
